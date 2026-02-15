@@ -15,6 +15,8 @@ var final_symbols := []
 # var money :int
 var current_bet :int = 10
 
+signal gameEnd
+
 @onready var gameNode := $"../../.."
 
 var weights_default = {
@@ -150,6 +152,7 @@ func play():
 			last_win_label.text = "Last Win:\n" + str(currentScore)
 			gameNode.money += currentScore
 			make_particle()
+		emit_signal("gameEnd")
 
 func score():
 	var first:String

@@ -24,6 +24,8 @@ var currentTurn: int = 3
 @onready var lose_sound: AudioStreamPlayer2D = $Audio/lose
 
 var betAmount:int = 0
+var isGameRunning: bool = 0
+signal gameEnd
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_PAUSABLE
@@ -90,9 +92,11 @@ func endGame():
 		print("wow its a draw :i")
 		makeEndScreen("draw")
 		await get_tree().create_timer(1.5, false).timeout
-		
+	emit_signal("gameEnd")
+	isGameRunning = 0
 
 func startGame():
+	isGameRunning = 1
 	buttonsNode.hide()
 	await playerNode.hit()
 	await dealerNode.hit()
@@ -105,7 +109,7 @@ func startBet():
 	dealerNode.reset()
 	playerNode.reset()
 	buttonsNode.hide()
-	if gameNode.money > 0: # TODO: actual like losing and shi
+	if gameNode.money > 0:
 		betNode.show()
 		betAmount = 0
 		betSlider.max_value = gameNode.money
@@ -153,7 +157,14 @@ func _onMouseUnhover() -> void:
 	infoYap.hide()
 
 func exitGame():
+	if isGameRunning:
+		await gameEnd 
+	print("hio")
+	buttonsNode.hide()
+	betNode.hide()
 	var fader = create_tween()
 	fader.tween_property(self, "modulate:a", 0, 1.0)
 	await fader.finished
 	queue_free()
+
+	

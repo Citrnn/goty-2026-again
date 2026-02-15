@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://4ki4rmjitk8n"]
+[gd_scene load_steps=6 format=3 uid="uid://4ki4rmjitk8n"]
 
 [ext_resource type="Script" uid="uid://c5ghrxb2fuvb5" path="res://scenes/main_menu.gd" id="1_ekxnf"]
 [ext_resource type="Texture2D" uid="uid://cwmpna4wlcger" path="res://assets/main_start_overlay.png" id="2_bqqt6"]
 [ext_resource type="Texture2D" uid="uid://ofbv4vbxw3pf" path="res://assets/Start_Button.png" id="3_wu84c"]
 [ext_resource type="Texture2D" uid="uid://c24jfjd0taw1n" path="res://assets/slots/retry_button.png" id="4_wu84c"]
+[ext_resource type="Texture2D" uid="uid://ce4nsvqaaeail" path="res://assets/free_play_button.png" id="5_8ln24"]
 
 [node name="MainMenu" type="Node2D"]
 script = ExtResource("1_ekxnf")
@@ -45,7 +46,18 @@ icon = ExtResource("4_wu84c")
 flat = true
 expand_icon = true
 
+[node name="FreePlayButton" type="Button" parent="Background"]
+layout_mode = 0
+offset_left = 56.0
+offset_top = 416.0
+offset_right = 226.66667
+offset_bottom = 512.0
+icon = ExtResource("5_8ln24")
+flat = true
+expand_icon = true
+
 [connection signal="gui_input" from="Background/PlayButton" to="." method="_onClickPlay"]
 [connection signal="mouse_entered" from="Background/PlayButton" to="." method="_onHoverPlay"]
 [connection signal="mouse_exited" from="Background/PlayButton" to="." method="_onUnhoverPlay"]
 [connection signal="gui_input" from="Background/ResetButton" to="." method="_onPressReset"]
+[connection signal="pressed" from="Background/FreePlayButton" to="." method="_onPressFreePlayButton"]

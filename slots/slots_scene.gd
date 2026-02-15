@@ -1,6 +1,6 @@
 extends Node2D
 @onready var yapping: Sprite2D = $UI_and_buttons/info_button/yapping
-
+@onready var reels:= $reels
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -12,6 +12,9 @@ func _process(delta: float) -> void:
 	pass
 	
 func exitGame():
+	$UI_and_buttons/play_button.disabled = true
+	if reels.is_spinning:
+		await reels.gameEnd
 	var fader = create_tween()
 	fader.tween_property(self, "modulate:a", 0, 1.0)
 	await fader.finished

@@ -28,6 +28,9 @@ var pity:int = 0
 var playerDice:Array
 var enemyDice:Array
 
+var isGameRunning:bool=false
+signal gameEnd
+
 
 func _ready() -> void:
 	startBet()
@@ -52,6 +55,7 @@ func startBet():
 	enemyDice.clear()
 
 func startGame():
+	isGameRunning = true
 	bet = betSlider.value
 	betNode.hide()
 	playerDice.append(rollRiggedDice())
@@ -80,7 +84,9 @@ func endGame():
 		makeEndScreen("draw")
 	if gameNode.money <= 75:
 		pity = 4
-
+	isGameRunning = false
+	emit_signal("gameEnd")
+	
 	startBet()
 
 func rollDice() -> int:
@@ -149,6 +155,8 @@ func _onUnhoverInfo() -> void:
 	infoYap.hide()
 
 func exitGame():
+	if isGameRunning:
+		await gameEnd
 	var fader = create_tween()
 	fader.tween_property(self, "modulate:a", 0, 1.0)
 	await fader.finished

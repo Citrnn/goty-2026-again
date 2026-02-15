@@ -55,6 +55,7 @@ offset_left = -48.0
 offset_top = -48.0
 offset_right = -32.0
 offset_bottom = 80.0
+step = 5.0
 
 [node name="BetLabel" type="Label" parent="Bet"]
 z_index = 300

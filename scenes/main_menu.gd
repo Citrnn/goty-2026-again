@@ -3,10 +3,11 @@ extends Node2D
 
 
 @onready var mainNode = get_tree().get_root().get_node("main")
-@onready var gameNode = $"../game"
+@onready var gameNode : Game = $"../game"
 @onready var background : TextureRect= $"./Background"
 @onready var playButton:= $"./Background/PlayButton"
 @onready var resetButton:=$"Background/ResetButton"
+@onready var freePlayButton:=$Background/FreePlayButton
 
 var isInAnimation: bool = 0
 
@@ -60,3 +61,9 @@ func _onPressReset(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT:
 		if !isInAnimation:
 			mainNode.endRun("Reset")
+
+
+func _onPressFreePlayButton() -> void:
+	freePlayButton.hide()
+	gameNode.startFreePlay()
+	if !isInAnimation: mainNode.unpause()

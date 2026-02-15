@@ -31,9 +31,8 @@ var failCount:= 0
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_PAUSABLE
-
+	await get_tree().create_timer(1.0, false).timeout
 	if !gameStarted:
-		await get_tree().create_timer(1.0, false).timeout
 		door_knock_sound.play()
 		await get_tree().create_timer(1.0, false).timeout
 		await makeDialogue("Looks like someone's at the door!","Player")
@@ -45,7 +44,7 @@ func startCutscene():
 	await makeDialogue("Not my problem, tenant! \nGive me the money or I'll kick you out","Landlord")
 	door_slam_sound.play()
 	door_lock_sound.play()
-	await get_tree().create_timer(1.2, false).timeout #TODO: Door slam sound
+	await get_tree().create_timer(1.2, false).timeout
 	await makeDialogue("You can't just lock me out of my own apartment","Landlord")
 	await makeDialogue("Darn, I only have $100... \nThe rent is $500","Player")
 	await makeDialogue("Oh, I know how to fix this! \nI can make money at my computer!","Player")
@@ -57,8 +56,13 @@ func startGame():
 	money = startingMoney
 	gameStarted = 1
 
+func startFreePlay():
+	money = startingMoney
+	gameStarted = 1
+	level = 999
+
 func _process(delta: float) -> void:
-	if gameStarted:
+	if gameStarted and level < 4:
 		time+=delta
 	if time >= botherInterval:
 		botherPlayer()
@@ -105,6 +109,7 @@ func setMoney(value):
 		level = 5
 		runFinale()
 	elif money >= LEVEL_3_THRESHOLD and level < 3:
+		computer.updateLevel()
 		await get_tree().create_timer(1.0, false).timeout
 		await makeDialogue("Wow! Thats A LOT of money!", "Player")
 		await makeDialogue("But... the more I have the more i can win", "Player")
@@ -113,8 +118,9 @@ func setMoney(value):
 		await makeDialogue("WHAT DO I DO?!", "Player", 1)
 		print("moving to level 3")
 		level = 3
-		computer.updateLevel()
+		
 	elif money >= LEVEL_2_THRESHOLD and level < 2:
+		computer.updateLevel()
 		await get_tree().create_timer(1.0, false).timeout
 		await makeDialogue("Wow! That was a very easy way to get the money i needed!", "Player")
 		await makeDialogue("I wonder how much more I could get!", "Player")
@@ -122,7 +128,6 @@ func setMoney(value):
 		await makeDialogue("What should i do?", "Player", 1)
 		print("moving to level 2")
 		level = 2
-		computer.updateLevel()
 
 func _updateLabel(value):
 	label.text = "$ " + str(value)

@@ -16,9 +16,10 @@ extends Node2D
 var activeGame
 
 func _ready() -> void:
-	slotsButton.modulate.a = 0.3
-	blackjackButton.modulate.a = 0.3
-	barbutButton.modulate.a = 1
+	updateLevel()
+	#slotsButton.modulate.a = 0.3
+	#blackjackButton.modulate.a = 0.3
+	#barbutButton.modulate.a = 1
 
 func _process(delta: float) -> void:
 	pass
@@ -26,7 +27,8 @@ func _process(delta: float) -> void:
 
 func updateLevel():
 	buttonsNode.show()
-	activeGame.exitGame()
+	if activeGame:
+		await activeGame.exitGame()
 	slotsButton.modulate.a = 0.3
 	blackjackButton.modulate.a = 0.3
 	barbutButton.modulate.a = 0.3
@@ -34,10 +36,11 @@ func updateLevel():
 		1: barbutButton.modulate.a = 1
 		2: blackjackButton.modulate.a = 1
 		3: slotsButton.modulate.a = 1
-
+		999: barbutButton.modulate.a = 1; blackjackButton.modulate.a = 1; slotsButton.modulate.a = 1
+		# free play ^
 
 func _onPressBarbutButton(event: InputEvent) -> void:
-	if gameNode.level == 1 and event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT:
+	if (gameNode.level == 1 or gameNode.level == 999) and event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT:
 		var barbutInstance = dice.instantiate()
 		add_child.call_deferred(barbutInstance)
 		activeGame = barbutInstance
@@ -45,7 +48,7 @@ func _onPressBarbutButton(event: InputEvent) -> void:
 
 
 func _onClickBlackjack(event: InputEvent) -> void:
-	if gameNode.level == 2 and event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT:
+	if (gameNode.level == 2 or gameNode.level == 999) and event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT:
 		var blackjackInstance = blackjack.instantiate()
 		add_child.call_deferred(blackjackInstance)
 		activeGame = blackjackInstance
@@ -53,7 +56,7 @@ func _onClickBlackjack(event: InputEvent) -> void:
 
 
 func _onClickSlots(event: InputEvent) -> void:
-	if gameNode.level == 3 and event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT:
+	if (gameNode.level == 3 or gameNode.level == 999) and event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT:
 		var slotsInstance = slots.instantiate()
 		add_child.call_deferred(slotsInstance)
 		activeGame = slotsInstance
@@ -61,7 +64,7 @@ func _onClickSlots(event: InputEvent) -> void:
 
 
 func _onMouseEnteredBarbut() -> void:
-	if gameNode.level == 1:
+	if (gameNode.level == 1 or gameNode.level == 999):
 		barbutButton.scale = Vector2(1.5, 1.5)
 
 
@@ -70,7 +73,7 @@ func _onMouseExitBarbut() -> void:
 
 
 func _onHoverBlackjack() -> void:
-	if gameNode.level == 2:
+	if (gameNode.level == 2 or gameNode.level == 999):
 		blackjackButton.scale = Vector2(1.5, 1.5)
 
 
@@ -79,7 +82,7 @@ func _onUnhoverBlackjack() -> void:
 
 
 func _onMouseHover() -> void:
-	if gameNode.level == 3:
+	if (gameNode.level == 3 or gameNode.level == 999):
 		slotsButton.scale = Vector2(1.5, 1.5)
 
 
